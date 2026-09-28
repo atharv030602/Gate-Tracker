@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GATE 2027 prep tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap" rel="stylesheet">
+<style id="css">
+:root{
+  --paper:#ffffff; --ink:#1c1d22; --omr:#c8235a; --omr-tint:#fce8ef; --line:#ecc9d5;
+  --muted:#65666e; --blue:#2447c9; --ok:#1d7a4a; --warn:#b3261e;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#141519; --ink:#ececef; --omr:#f0709a; --omr-tint:#2a1820; --line:#4a2a36;
+    --muted:#9c9da6; --blue:#8fa6ff; --ok:#5fcf93; --warn:#ff8a80; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141519; --ink:#ececef; --omr:#f0709a; --omr-tint:#2a1820; --line:#4a2a36;
+  --muted:#9c9da6; --blue:#8fa6ff; --ok:#5fcf93; --warn:#ff8a80; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+a{color:var(--blue)}
+.wrap{max-width:880px;margin:0 auto;padding:24px 18px 64px}
+h1,h2,h3{font-stretch:88%;line-height:1.15;margin:0}
+h2{font-size:1.45rem;font-weight:750;margin:40px 0 6px}
+p{margin:6px 0}
+.muted{color:var(--muted)}
+
+/* OMR-style header form */
+.form{border:1.5px solid var(--omr);border-radius:4px}
+.form-title{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding:12px 14px;border-bottom:1.5px solid var(--omr);background:var(--omr-tint)}
+.form-title h1{font-size:1.25rem;font-weight:800;color:var(--omr);font-stretch:75%}
+.form-title span{font-size:.85rem;color:var(--omr)}
+.fields{display:grid;grid-template-columns:repeat(4,1fr)}
+.field{padding:10px 14px;border-right:1px solid var(--line)}
+.field:last-child{border-right:0}
+.field small{display:block;font-size:.75rem;color:var(--omr)}
+.field b{font-size:1.05rem;font-weight:700}
+@media (max-width:640px){.fields{grid-template-columns:1fr 1fr}.field:nth-child(2){border-right:0}
+  .field:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+.verdict{margin:22px 0 4px;font-size:clamp(1.6rem,4.6vw,2.4rem);font-weight:780;font-stretch:80%;line-height:1.1}
+.verdict.behind{color:var(--warn)} .verdict.ahead{color:var(--ok)}
+.status{font-size:.8rem;color:var(--muted);margin-top:6px}
+
+/* chart */
+.chart{margin-top:14px;overflow-x:auto}
+.chart svg{display:block;width:100%;min-width:520px;height:auto}
+.legend{display:flex;gap:18px;font-size:.82rem;color:var(--muted);flex-wrap:wrap;margin-top:4px}
+.legend i{display:inline-block;width:22px;height:0;vertical-align:middle;margin-right:6px;border-top:2.5px solid var(--ink)}
+.legend i.plan{border-top:2px dashed var(--omr)}
+
+/* phases & subjects */
+.phase-note{color:var(--muted);margin-bottom:10px}
+details.subj{border-top:1px solid var(--line)}
+details.subj:last-of-type{border-bottom:1px solid var(--line)}
+details.subj>summary{list-style:none;cursor:pointer;padding:14px 2px;display:grid;
+  grid-template-columns:1fr 140px;gap:6px 16px;align-items:center}
+details.subj>summary::-webkit-details-marker{display:none}
+summary:focus-visible,.bubble:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2.5px solid var(--blue);outline-offset:2px}
+.s-name{font-weight:700;font-size:1.08rem}
+.s-name::before{content:"+";display:inline-block;width:1.1em;color:var(--omr);font-weight:600}
+details[open] .s-name::before{content:"–"}
+.s-meta{grid-column:1;font-size:.84rem;color:var(--muted);padding-left:1.1em}
+.bar{grid-column:2;grid-row:1 / span 2;position:relative;height:10px;border:1px solid var(--omr);border-radius:5px;overflow:visible}
+.bar>span{position:absolute;left:0;top:0;bottom:0;background:var(--ink);border-radius:4px}
+.bar>em{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--omr)}
+.bar-num{position:absolute;right:0;top:12px;font-size:.75rem;color:var(--muted);font-style:normal}
+.s-body{padding:0 0 18px 1.1em}
+.links{display:flex;flex-wrap:wrap;gap:8px 16px;margin:2px 0 12px;font-size:.92rem}
+.why{font-size:.92rem;margin-bottom:10px}
+.topic-head,.topic{display:grid;grid-template-columns:1fr 92px;gap:12px}
+.topic-head{font-size:.75rem;color:var(--omr);padding-bottom:4px;border-bottom:1px solid var(--line)}
+.topic-head span:last-child{display:flex;justify-content:space-around}
+.topic{padding:10px 0;border-bottom:1px dashed var(--line)}
+.topic:last-child{border-bottom:0}
+.t-name{font-weight:650}
+.t-ex{font-size:.9rem;color:var(--muted);margin-top:2px;max-width:62ch}
+.bubbles{display:flex;justify-content:space-around;align-items:flex-start;padding-top:2px}
+.bubble{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--omr);background:transparent;
+  color:var(--omr);font:600 .72rem/1 "Archivo",system-ui,sans-serif;cursor:pointer;padding:0;
+  transition:background-color .15s ease}
+.bubble[aria-checked="true"]{background:radial-gradient(circle at 40% 35%,color-mix(in srgb,var(--ink) 80%,var(--paper)) 0,var(--ink) 70%);
+  border-color:var(--ink);color:transparent}
+@media (prefers-reduced-motion:reduce){.bubble{transition:none}}
+
+/* mocks */
+.mock-form{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin:10px 0 14px}
+.mock-form label{display:flex;flex-direction:column;font-size:.78rem;color:var(--omr);gap:3px}
+input,select{font:inherit;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:4px;padding:7px 9px}
+input[type=number]{width:110px}
+button.primary{font:inherit;font-weight:650;background:var(--ink);color:var(--paper);border:0;border-radius:4px;padding:9px 16px;cursor:pointer}
+.mock-list{list-style:none;padding:0;margin:0}
+.mock-list li{display:flex;gap:14px;align-items:center;padding:7px 0;border-bottom:1px dashed var(--line);font-size:.92rem}
+.mock-list li b{min-width:62px}
+.mock-list button{margin-left:auto;font:inherit;font-size:.82rem;background:none;border:0;color:var(--muted);cursor:pointer;text-decoration:underline}
+.rules{padding-left:1.2em}
+.rules li{margin:6px 0}
+.table-wrap{overflow-x:auto}
+table.week{border-collapse:collapse;min-width:480px;width:100%;font-size:.92rem}
+table.week th,table.week td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.week th{color:var(--omr);font-weight:600;font-size:.8rem}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="application/json" id="state">{"t":{},"mocks":[],"hist":{},"ts":0}</script>
+<script id="app">
+(function(){
+"use strict";
+var HEAD='<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>GATE 2027 prep tracker</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap" rel="stylesheet">';
+var LSKEY='gate2027-tracker-v1', VIEWKEY='gate2027-view';
+var PLAN_START=day('2026-09-28'), PLAN_END=day('2027-02-06'), EXAM=day('2027-02-06');
+function day(s){return new Date(s+'T00:00:00');}
+function yt(q){return 'https://www.youtube.com/results?search_query='+encodeURIComponent(q);}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function key(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function fmt(d){return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});}
+
+var PHASES=[
+ {id:0,name:'Every day, till the exam',note:'20 minutes of aptitude daily. It is 15 marks in both papers and the easiest marks to collect.'},
+ {id:1,name:'Phase 1: Foundation (28 Sep to 11 Oct)',note:'Before your job starts. Aim for 6 to 8 hours a day. Start with subjects where your Java and SQL background gives you speed.'},
+ {id:2,name:'Phase 2: Core CS (12 Oct to 20 Dec)',note:'Alongside the job. About 2.5 hours on weekdays, 7 to 8 hours on Saturday, 5 to 6 on Sunday. Finish PYQs of each subject before moving on.'},
+ {id:3,name:'Phase 3: Leftovers and DA topics (21 Dec to 10 Jan)',note:'Low-weight CS subjects and the DA-only topics. If you are behind, cut the DA deep topics first, never the core CS subjects.'}
+];
+
+var S=[
+{id:'ga',ph:0,name:'General Aptitude',paper:'CS + DA',start:'2026-09-28',end:'2027-02-05',
+ why:'15 marks in each paper. Questions repeat in style, so past papers are the best practice.',
+ links:[['GATE general aptitude full course','GATE general aptitude full course'],['Official GATE papers and mock test','https://gate2027.iitm.ac.in']],
+ t:[['Verbal ability','Grammar, word meaning, sentence completion and short reading passages. GATE asks which word fits, where the error is, or what a passage implies.'],
+    ['Quantitative ability','Percentages, ratios, time and work, speed and distance, simple probability, and reading tables and charts. The biggest part of aptitude.'],
+    ['Analytical reasoning','Logic puzzles, seating arrangements, and deciding which conclusions follow from given statements.'],
+    ['Spatial reasoning','Rotating, folding and cutting shapes, and finding the next figure in a pattern.']]},
+
+{id:'dm',ph:1,name:'Discrete Mathematics',paper:'CS',start:'2026-09-28',end:'2026-10-04',
+ why:'One of the highest-weight parts of the CS paper. It also supports TOC, Algorithms and AI later.',
+ links:[['Gate Smashers: Discrete Mathematics','Gate Smashers discrete mathematics playlist']],
+ t:[['Propositional and first-order logic','Statements that are true or false, joined with AND, OR, NOT and IMPLIES, plus "for all" and "there exists". GATE asks whether a formula is always true and to translate English sentences into logic.'],
+    ['Sets, relations and functions','Types of relations (reflexive, symmetric, transitive), equivalence relations, one-to-one and onto functions. GATE asks counting questions like "how many symmetric relations exist on a set of n elements".'],
+    ['Partial orders and lattices','Orderings where not every pair can be compared, drawn as Hasse diagrams. GATE asks whether a structure is a lattice and asks for upper and lower bounds.'],
+    ['Groups and monoids','A set with an operation that follows fixed rules (closure, identity, inverse). GATE asks whether something is a group, and about subgroups and the order of elements.'],
+    ['Combinatorics','Counting: permutations, combinations, pigeonhole principle, recurrence relations and generating functions. GATE asks "in how many ways" questions and asks you to solve recurrences.'],
+    ['Graph theory','Connectivity, matching, colouring, Euler and Hamiltonian paths, planar graphs. GATE asks about chromatic number, vertex degrees and edge counts.']]},
+
+{id:'cds',ph:1,name:'C Programming and Data Structures',paper:'CS + DA',start:'2026-09-28',end:'2026-10-11',
+ why:'GATE code questions are in C, not Java. Your Java habits help with logic but not with pointers, so give C real time.',
+ links:[['Neso Academy: C Programming','Neso Academy C programming playlist'],['Jenny\u2019s Lectures: Data Structures','Jenny\'s lectures data structures playlist']],
+ t:[['C programming','Pointers, recursion, arrays, strings, variable scope, call by value vs call by reference. GATE gives a short C program and asks for its output. Practise tracing code on paper.'],
+    ['Arrays, stacks and queues','Linear structures. GATE asks about infix to postfix conversion, building a queue from stacks, and array address calculation.'],
+    ['Linked lists','Nodes connected by pointers. GATE gives a function that moves pointers around and asks what it does to the list.'],
+    ['Trees, BST and heaps','Binary trees, traversal orders, binary search trees, min and max heaps. GATE asks you to rebuild a tree from traversals, count nodes, and give the heap after inserts or deletes.'],
+    ['Graph representation','Adjacency matrix vs adjacency list, and basic BFS and DFS. The deeper graph work comes in Algorithms.'],
+    ['Hashing','Storing keys in a table using a hash function, and handling collisions with chaining or probing. GATE asks where keys land and the expected number of probes.']]},
+
+{id:'dbms',ph:1,name:'Databases (DBMS)',paper:'CS + DA',start:'2026-10-05',end:'2026-10-11',
+ why:'Your SQL experience makes this the fastest subject to score in. GATE still tests tricky cases like NULLs and duplicates.',
+ links:[['Gate Smashers: DBMS','Gate Smashers DBMS playlist']],
+ t:[['ER model','Entities, attributes, relationships and cardinality. GATE asks the minimum number of tables needed for an ER diagram.'],
+    ['Relational algebra and tuple calculus','Formal query languages: select, project, join and division. GATE asks what a given query returns.'],
+    ['SQL','Joins, GROUP BY, HAVING and nested queries. GATE gives tables and asks for the output of a query.'],
+    ['Keys, functional dependencies and normal forms','Candidate keys, closure of attributes, 1NF to BCNF, lossless and dependency-preserving decomposition. The highest-scoring DBMS topic.'],
+    ['File organisation and indexing','How data is stored on disk, plus B and B+ trees. GATE asks about tree order and the number of disk accesses.'],
+    ['Transactions and concurrency control','ACID properties, schedules, conflict serializability, locking and timestamps. GATE asks whether a schedule is serializable or recoverable.']]},
+
+{id:'algo',ph:2,name:'Algorithms',paper:'CS + DA',start:'2026-10-12',end:'2026-10-25',
+ why:'High weight and asked every year. Needs the most practice problems of any subject.',
+ links:[['Abdul Bari: Algorithms','Abdul Bari algorithms playlist']],
+ t:[['Asymptotic analysis and recurrences','Big-O, Omega and Theta, and solving recurrences with the master theorem.'],
+    ['Searching and sorting','Binary search, merge, quick, heap and insertion sort: best and worst cases, and the number of comparisons.'],
+    ['Divide and conquer','Split a problem, solve the parts, combine them. GATE asks the time complexity of such algorithms.'],
+    ['Greedy algorithms','Pick the best choice at each step: Huffman coding, fractional knapsack, job scheduling.'],
+    ['Dynamic programming','Solve overlapping subproblems once and reuse the answers: LCS, 0/1 knapsack, matrix chain multiplication. GATE asks you to fill the table.'],
+    ['Graph algorithms','BFS, DFS, topological sort, minimum spanning trees (Prim, Kruskal), shortest paths (Dijkstra, Bellman-Ford, Floyd-Warshall).']]},
+
+{id:'os',ph:2,name:'Operating Systems',paper:'CS',start:'2026-10-26',end:'2026-11-06',
+ why:'Heavy on numericals. Scheduling and memory questions are close to guaranteed marks once practised.',
+ links:[['Gate Smashers: Operating System','Gate Smashers operating system playlist']],
+ t:[['Processes, threads and system calls','Process states, how fork() behaves, user vs kernel threads. GATE loves asking how many processes a set of fork() calls creates.'],
+    ['CPU scheduling','FCFS, SJF, SRTF, Round Robin and priority scheduling. GATE asks for average waiting or turnaround time.'],
+    ['Synchronisation','Race conditions, critical sections, semaphores and classic problems. GATE asks whether code guarantees mutual exclusion and the final value of shared variables.'],
+    ['Deadlock','The four conditions, Banker\u2019s algorithm, resource allocation graphs. GATE asks whether a state is safe.'],
+    ['Memory management and virtual memory','Paging, page tables, TLB, page replacement (FIFO, LRU, Optimal). Numericals on page table size and page faults are common.'],
+    ['File systems and disk scheduling','File allocation, inodes, disk scheduling (FCFS, SSTF, SCAN). GATE asks max file size with inode pointers and total head movement.']]},
+
+{id:'toc',ph:2,name:'Theory of Computation',paper:'CS',start:'2026-11-07',end:'2026-11-17',
+ why:'Feels abstract at first but the question types are limited. Good return on time once the patterns click.',
+ links:[['Neso Academy: Theory of Computation','Neso Academy theory of computation playlist']],
+ t:[['Finite automata and regular languages','DFA and NFA, converting NFA to DFA, minimising a DFA. GATE asks the minimum number of states for a language.'],
+    ['Regular expressions','Patterns that describe regular languages. GATE asks which strings a regex matches, or whether two regexes are equal.'],
+    ['Context-free grammars and pushdown automata','Grammars and the stack-based machine that reads them. GATE asks whether a language is context-free.'],
+    ['Pumping lemma and closure properties','Tools to prove a language is not regular or not context-free, and which operations keep a language class closed.'],
+    ['Turing machines and undecidability','The most powerful machine model and problems no algorithm can solve. GATE asks decidable vs undecidable, recursive vs recursively enumerable.']]},
+
+{id:'dl',ph:2,name:'Digital Logic',paper:'CS',start:'2026-11-18',end:'2026-11-24',
+ why:'Short subject with direct questions. Number representation is easy marks, do not skip it.',
+ links:[['Neso Academy: Digital Electronics','Neso Academy digital electronics playlist']],
+ t:[['Boolean algebra and K-maps','Simplifying logic expressions with minterms, maxterms and don\u2019t-cares. GATE asks for prime implicants and minimal forms.'],
+    ['Combinational circuits','Circuits without memory: multiplexers, decoders, adders. GATE asks what function a circuit implements.'],
+    ['Sequential circuits','Circuits with memory: flip-flops, counters, registers. GATE asks the sequence of states a counter goes through.'],
+    ['Number representation and arithmetic','Binary, hex, 1\u2019s and 2\u2019s complement, IEEE 754 floating point, overflow.']]},
+
+{id:'coa',ph:2,name:'Computer Organisation and Architecture',paper:'CS',start:'2026-11-25',end:'2026-12-05',
+ why:'Most students find this the hardest. Pipelining and cache carry high weight, so do many numericals here.',
+ links:[['Gate Smashers: COA','Gate Smashers computer organization and architecture playlist']],
+ t:[['Machine instructions and addressing modes','Instruction formats, how many instructions a format allows, direct, indirect and indexed addressing.'],
+    ['ALU, data path and control unit','How the CPU runs an instruction. Hardwired vs microprogrammed control. GATE asks control word size.'],
+    ['Pipelining and hazards','Overlapping instruction stages to go faster, and the data, control and structural hazards that slow it down. GATE asks speedup and total clock cycles.'],
+    ['Memory hierarchy and cache','Direct, set-associative and fully associative mapping, hit ratio, average access time. GATE asks tag and index bits and number of misses.'],
+    ['I/O interface','Interrupts, DMA and programmed I/O. GATE asks what share of CPU time goes to I/O.']]},
+
+{id:'cn',ph:2,name:'Computer Networks',paper:'CS',start:'2026-12-06',end:'2026-12-15',
+ why:'Subnetting and TCP questions show up almost every year. Application layer is mostly facts and quick to cover.',
+ links:[['Gate Smashers: Computer Networks','Gate Smashers computer networks playlist']],
+ t:[['Layering and switching','OSI and TCP/IP layers, packet vs circuit switching, transmission and propagation delay.'],
+    ['Data link layer','Framing, error detection (CRC, checksum), sliding window protocols, Ethernet, CSMA/CD. GATE asks window size and efficiency.'],
+    ['IP addressing and subnetting','IPv4, CIDR, subnet masks, routing table lookups.'],
+    ['Routing and network-layer protocols','Distance vector, link state, fragmentation, ARP, DHCP, ICMP, NAT. GATE asks fragment offsets and routing table updates.'],
+    ['Transport layer','TCP vs UDP, flow control, congestion control (slow start). GATE asks the congestion window size after given events.'],
+    ['Application layer','DNS, HTTP, SMTP, FTP and email. Mostly factual.']]},
+
+{id:'la',ph:2,name:'Linear Algebra',paper:'CS + DA',start:'2026-12-16',end:'2026-12-18',
+ why:'Short and formula-based in CS. DA goes deeper, and that part links straight to PCA in ML.',
+ links:[['Linear Algebra for GATE','GATE engineering mathematics linear algebra full playlist'],['3Blue1Brown: Essence of Linear Algebra (for intuition)','3Blue1Brown essence of linear algebra']],
+ t:[['Matrices, determinants and rank','Matrix operations, determinant rules, rank. Quick formula questions.'],
+    ['Systems of linear equations','When a system has one, many or no solutions, decided using rank.'],
+    ['Eigenvalues and eigenvectors','Values where Ax = \u03bbx. Know the shortcuts: sum of eigenvalues = trace, product = determinant.'],
+    ['LU decomposition','Splitting a matrix into lower and upper triangular parts. Asked occasionally.'],
+    ['DA only: vector spaces, projections, SVD','Orthogonality, projections and singular value decomposition. Needed for the DA paper.']]},
+
+{id:'prob',ph:2,name:'Probability and Statistics',paper:'CS + DA',start:'2026-12-19',end:'2026-12-20',
+ why:'You covered Bayes and basics in MCA. The work here is GATE-style numericals, not new theory.',
+ links:[['Probability for GATE','GATE probability and statistics full course']],
+ t:[['Basic and conditional probability','Probability rules, independent events, conditional probability.'],
+    ['Bayes theorem','Updating a probability after new evidence. Revise with GATE-level numericals.'],
+    ['Random variables and expectation','Discrete and continuous random variables, mean, variance, linearity of expectation.'],
+    ['Distributions','Uniform, binomial, Poisson, exponential, normal. Know each one\u2019s mean and variance by heart.'],
+    ['Descriptive statistics','Mean, median, mode, standard deviation, correlation. Easy marks.']]},
+
+{id:'calc',ph:3,name:'Calculus and Optimisation',paper:'CS + DA',start:'2026-12-21',end:'2026-12-23',
+ why:'Low weight in CS. DA adds Taylor series and optimisation, so do both together.',
+ links:[['Calculus for GATE','GATE engineering mathematics calculus full playlist']],
+ t:[['Limits, continuity and differentiability','Evaluating limits (including L\u2019H\u00f4pital\u2019s rule) and checking continuity.'],
+    ['Maxima and minima','Using derivatives to find highest and lowest values of a function.'],
+    ['Mean value theorem and integration','Basic definite integrals and the mean value theorem.'],
+    ['DA only: Taylor series and optimisation','Approximating a function with a polynomial, and single-variable optimisation.']]},
+
+{id:'cd',ph:3,name:'Compiler Design',paper:'CS',start:'2026-12-24',end:'2026-12-30',
+ why:'Lowest weight of the CS subjects. First to cut if you are behind, but parsing alone is worth doing.',
+ links:[['Gate Smashers: Compiler Design','Gate Smashers compiler design playlist']],
+ t:[['Lexical analysis','Breaking code into tokens. GATE asks how many tokens a statement has.'],
+    ['Parsing','Top-down (LL(1)) and bottom-up (LR, SLR, LALR) parsing, FIRST and FOLLOW sets. The highest-weight compiler topic.'],
+    ['Syntax-directed translation','Attaching actions to grammar rules. S-attributed and L-attributed definitions.'],
+    ['Runtime environments','Activation records, stack allocation, parameter passing.'],
+    ['Intermediate code and optimisation','Three-address code, basic blocks, liveness analysis, constant folding.']]},
+
+{id:'stat',ph:3,name:'DA: Statistics',paper:'DA',start:'2026-12-31',end:'2027-01-02',
+ why:'Your MCA hypothesis-testing work helps, but GATE asks numericals, not concepts only.',
+ links:[['StatQuest: Statistics Fundamentals','StatQuest statistics fundamentals playlist']],
+ t:[['Sampling and the central limit theorem','Why averages of many samples follow a normal curve. The base of all testing.'],
+    ['Confidence intervals','A range that probably contains the true value.'],
+    ['Hypothesis testing: z, t and chi-square','Deciding whether a result is real or random chance.'],
+    ['Joint, marginal and conditional distributions','Probability with two variables together, plus conditional expectation and variance.']]},
+
+{id:'ml',ph:3,name:'DA: Machine Learning',paper:'DA',start:'2027-01-03',end:'2027-01-07',
+ why:'Lab work (load data, fit a model, check accuracy) is not what GATE tests. It asks for the maths behind each model, done by hand.',
+ links:[['StatQuest: Machine Learning','StatQuest machine learning playlist'],['NPTEL: Introduction to Machine Learning','NPTEL introduction to machine learning']],
+ t:[['Regression','Linear regression, least squares, ridge regression. GATE asks you to compute weights or loss by hand.'],
+    ['Classification models','Logistic regression, k-NN, naive Bayes, LDA, SVM and decision trees. Know how each one decides and its key formula.'],
+    ['Bias-variance and cross-validation','Underfitting vs overfitting, leave-one-out and k-fold cross-validation.'],
+    ['Neural network basics','Multi-layer perceptron, activation functions, forward pass. GATE asks the output of a small network.'],
+    ['Unsupervised learning','k-means, k-medoids, hierarchical clustering (single and complete linkage), PCA. GATE asks the clusters after one iteration.']]},
+
+{id:'ai',ph:3,name:'DA: Artificial Intelligence',paper:'DA',start:'2027-01-08',end:'2027-01-09',
+ why:'Search and Bayesian networks are the scoring parts. Logic overlaps with Discrete Maths.',
+ links:[['AI for GATE DA','GATE DA artificial intelligence search bayesian network']],
+ t:[['Search: uninformed, informed, adversarial','BFS, DFS, uniform cost, A* with heuristics, minimax with alpha-beta pruning. GATE asks the order nodes are expanded and which nodes get pruned.'],
+    ['Logic','Propositional and predicate logic and inference. Mostly covered in Discrete Maths.'],
+    ['Reasoning under uncertainty','Conditional independence, Bayesian networks, exact inference (variable elimination) and approximate inference (sampling).']]},
+
+{id:'dap',ph:3,name:'DA: Python and Data Warehousing',paper:'DA',start:'2027-01-10',end:'2027-01-10',
+ why:'DA code questions are in Python. Warehousing is short and factual.',
+ links:[['Python basics for GATE DA','GATE DA python programming'],['Gate Smashers: Data Warehouse','Gate Smashers data warehouse']],
+ t:[['Python programming','Lists, dictionaries, functions, recursion, and reading output of short programs.'],
+    ['Data warehousing and modelling','Star, snowflake and galaxy schemas, OLAP operations, and data transformation (normalisation, discretisation, sampling, compression).']]}
+];
+
+var TOTAL=S.reduce(function(a,s){return a+s.t.length;},0);
+
+/* ---------- state ---------- */
+var state;
+try{state=JSON.parse(document.getElementById('state').textContent);}catch(e){state={t:{},mocks:[],hist:{},ts:0};}
+state.t=state.t||{};state.mocks=state.mocks||[];state.hist=state.hist||{};state.ts=state.ts||0;
+var pendingFromLocal=false;
+try{var ls=JSON.parse(localStorage.getItem(LSKEY)||'null');
+  if(ls&&ls.ts>state.ts){state=ls;pendingFromLocal=true;}}catch(e){}
+
+function tk(sid,i){return sid+'-'+i;}
+function isOn(sid,i,f){var v=state.t[tk(sid,i)];return !!(v&&v[f]);}
+function frac(s,d){var a=day(s.start),b=new Date(day(s.end).getTime()+864e5);
+  return Math.max(0,Math.min(1,(d-a)/(b-a)));}
+function planned(d){return S.reduce(function(a,s){return a+s.t.length*frac(s,d);},0)/TOTAL;}
+function subjDone(s){var n=0;s.t.forEach(function(_,i){if(isOn(s.id,i,'s'))n++;if(isOn(s.id,i,'p'))n++;});return n/(2*s.t.length);}
+function actual(){var n=0;S.forEach(function(s){s.t.forEach(function(_,i){if(isOn(s.id,i,'s'))n++;if(isOn(s.id,i,'p'))n++;});});return n/(2*TOTAL);}
+
+/* ---------- saving (Firebase sync) ---------- */
+// 1) Paste your Firebase Realtime Database URL below (see README.md).
+var DB_URL='https://gate-tracker-f1ed3-default-rtdb.asia-southeast1.firebasedatabase.app';
+var KEYSTORE='gate2027-sync-key';
+function makeKey(){var c='abcdefghijkmnpqrstuvwxyz23456789',s='',r=new Uint32Array(24);crypto.getRandomValues(r);for(var i=0;i<24;i++)s+=c[r[i]%c.length];return s;}
+var dbReady=/^https:\/\//.test(DB_URL);
+var SYNC_KEY=(function(){var h=location.hash.replace(/^#/,'').trim(),k='';
+  try{k=h||localStorage.getItem(KEYSTORE)||'';}catch(e){k=h;}
+  if(!k&&dbReady)k=makeKey();
+  if(k){try{localStorage.setItem(KEYSTORE,k);}catch(e){} if(location.hash!=='#'+k)history.replaceState(null,'','#'+k);}
+  return k;})();
+var canSync=dbReady&&SYNC_KEY.length>=16;
+function remoteUrl(){return DB_URL.replace(/\/+$/,'')+'/trackers/'+encodeURIComponent(SYNC_KEY)+'.json';}
+
+var dirty=false,timer=null,busy=false,statusMsg=canSync?'Connecting…':(dbReady?'Sync key missing. Progress is saved on this device only.':'Sync not set up yet. Progress is saved on this device only.');
+function setStatus(m){statusMsg=m;var el=document.getElementById('save-status');if(el)el.textContent=m;}
+function saveLocal(){try{localStorage.setItem(LSKEY,JSON.stringify(state));}catch(e){}}
+function now(){return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
+function changed(){
+  state.ts=Date.now();
+  state.hist[key(new Date())]=Math.round(actual()*1000)/10;
+  saveLocal();
+  if(!canSync)return;
+  dirty=true;setStatus('Saving…');clearTimeout(timer);timer=setTimeout(pushNow,1200);
+}
+function pushNow(keepalive){
+  clearTimeout(timer);
+  if(!canSync||!dirty)return;
+  dirty=false;busy=true;
+  fetch(remoteUrl(),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(state),keepalive:!!keepalive})
+   .then(function(r){if(!r.ok)throw new Error(r.status);busy=false;setStatus('Saved at '+now()+'. Open this same link on any device.');})
+   .catch(function(){busy=false;dirty=true;setStatus('Offline or sync failed. Saved on this device, retrying.');timer=setTimeout(pushNow,15000);});
+}
+function norm(d){d.t=d.t||{};d.mocks=d.mocks||[];d.hist=d.hist||{};d.ts=d.ts||0;return d;}
+function pull(){
+  if(!canSync||busy)return;
+  if(dirty){pushNow();return;}
+  fetch(remoteUrl(),{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
+   .then(function(data){
+     if(data&&data.ts>state.ts){state=norm(data);saveLocal();if(typeof rerenderKeepOpen==='function')rerenderKeepOpen();setStatus('Synced at '+now()+'.');}
+     else if(!data||state.ts>data.ts){dirty=true;pushNow();}
+     else setStatus('Synced at '+now()+'. Open this same link on any device.');
+   })
+   .catch(function(){setStatus('Can\u2019t reach the sync server. Saved on this device.');});
+}
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='hidden'){if(dirty)pushNow(true);}else pull();});
+window.addEventListener('online',pull);
+
+/* ---------- rendering ---------- */
+function chartSvg(){
+  var W=640,H=230,L=40,R=12,T=14,B=30,iw=W-L-R,ih=H-T-B,span=PLAN_END-PLAN_START;
+  function x(d){return L+Math.max(0,Math.min(1,(d-PLAN_START)/span))*iw;}
+  function y(v){return T+(1-v)*ih;}
+  var g='';
+  [0,.25,.5,.75,1].forEach(function(v){g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--line)" stroke-width="1"/>'+
+    '<text x="'+(L-8)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="11" fill="var(--muted)">'+(v*100)+'%</text>';});
+  ['2026-10-01','2026-11-01','2026-12-01','2027-01-01','2027-02-01'].forEach(function(m){var d=day(m);
+    g+='<text x="'+x(d)+'" y="'+(H-10)+'" text-anchor="middle" font-size="11" fill="var(--muted)">'+d.toLocaleDateString('en-GB',{month:'short'})+'</text>';});
+  var pts=[];for(var t=PLAN_START.getTime();t<=PLAN_END.getTime();t+=864e5){var d=new Date(t);pts.push(x(d).toFixed(1)+','+y(planned(d)).toFixed(1));}
+  g+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="var(--omr)" stroke-width="2" stroke-dasharray="5 4"/>';
+  var h=Object.keys(state.hist).sort().map(function(k){return [day(k),state.hist[k]/100];});
+  var today=new Date();
+  if(h.length){
+    var ap=h.map(function(p){return x(p[0]).toFixed(1)+','+y(p[1]).toFixed(1);});
+    g+='<polyline points="'+ap.join(' ')+'" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>';
+    var last=h[h.length-1];g+='<circle cx="'+x(last[0])+'" cy="'+y(last[1])+'" r="4" fill="var(--ink)"/>';
+  }
+  var tx=x(today);
+  g+='<line x1="'+tx+'" x2="'+tx+'" y1="'+T+'" y2="'+(T+ih)+'" stroke="var(--blue)" stroke-width="1" stroke-dasharray="2 3"/>'+
+     '<text x="'+(tx+4)+'" y="'+(T+10)+'" font-size="11" fill="var(--blue)">today</text>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Planned versus actual progress over time">'+g+'</svg>';
+}
+function mockSvg(){
+  var m=state.mocks.slice().sort(function(a,b){return a.d<b.d?-1:1;});
+  if(m.length<2)return '';
+  var W=640,H=170,L=40,R=12,T=12,B=26,iw=W-L-R,ih=H-T-B,n=m.length;
+  function x(i){return L+(n===1?iw/2:i*iw/(n-1));} function y(v){return T+(1-v/100)*ih;}
+  var g='';
+  [0,50,100].forEach(function(v){g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--line)"/><text x="'+(L-8)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="11" fill="var(--muted)">'+v+'</text>';});
+  ['CS','DA'].forEach(function(p){
+    var pts=[];m.forEach(function(e,i){if(e.p===p)pts.push([x(i),y(e.s)]);});
+    var col=p==='CS'?'var(--ink)':'var(--omr)';
+    if(pts.length>1)g+='<polyline points="'+pts.map(function(q){return q[0].toFixed(1)+','+q[1].toFixed(1);}).join(' ')+'" fill="none" stroke="'+col+'" stroke-width="2"/>';
+    pts.forEach(function(q){g+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="3.5" fill="'+col+'"/>';});
+  });
+  return '<div class="chart"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Mock test scores">'+g+'</svg></div>'+
+    '<div class="legend"><span><i></i>CS mocks</span><span><i style="border-color:var(--omr)"></i>DA mocks</span></div>';
+}
+function subjectHtml(s){
+  var today=new Date(),done=subjDone(s),exp=frac(s,today);
+  var rows=s.t.map(function(t,i){
+    return '<div class="topic"><div><div class="t-name">'+esc(t[0])+'</div><div class="t-ex">'+esc(t[1])+'</div></div>'+
+      '<div class="bubbles">'+
+      '<button class="bubble" role="checkbox" aria-checked="'+isOn(s.id,i,'s')+'" data-sid="'+s.id+'" data-i="'+i+'" data-f="s" aria-label="Studied: '+esc(t[0])+'">S</button>'+
+      '<button class="bubble" role="checkbox" aria-checked="'+isOn(s.id,i,'p')+'" data-sid="'+s.id+'" data-i="'+i+'" data-f="p" aria-label="PYQs done: '+esc(t[0])+'">P</button>'+
+      '</div></div>';}).join('');
+  var links=s.links.map(function(l){var url=/^https?:/.test(l[1])?l[1]:yt(l[1]);
+    return '<a href="'+esc(url)+'" target="_blank" rel="noopener">'+esc(l[0])+'</a>';}).join('');
+  return '<details class="subj" data-sid="'+s.id+'"><summary>'+
+    '<span class="s-name">'+esc(s.name)+'</span>'+
+    '<span class="bar" aria-label="'+Math.round(done*100)+'% done, plan says '+Math.round(exp*100)+'%"><span style="width:'+(done*100)+'%"></span><em style="left:calc('+(exp*100)+'% - 1px)"></em><i class="bar-num">'+Math.round(done*100)+'% done</i></span>'+
+    '<span class="s-meta">'+esc(s.paper)+(s.ph===0?'':' | '+fmt(day(s.start))+' to '+fmt(day(s.end)))+'</span>'+
+    '</summary><div class="s-body"><p class="why">'+esc(s.why)+'</p><div class="links">'+links+'</div>'+
+    '<div class="topic-head"><span>Topic and what GATE asks</span><span><span>Studied</span><span>PYQs</span></span></div>'+rows+'</div></details>';
+}
+function render(){
+  var today=new Date(),a=actual(),p=planned(today),diff=a-p;
+  var days=Math.max(0,Math.ceil((EXAM-today)/864e5));
+  var gapTopics=Math.round(Math.abs(diff)*TOTAL);
+  var cls='',verdict;
+  if(diff<-0.02){cls='behind';verdict='You are '+Math.round(-diff*100)+'% behind plan, about '+gapTopics+' topic'+(gapTopics===1?'':'s')+'.';}
+  else if(diff>0.02){cls='ahead';verdict='You are '+Math.round(diff*100)+'% ahead of plan.';}
+  else verdict='You are on plan.';
+  var html=
+  '<div class="form"><div class="form-title"><h1>GATE 2027 preparation sheet</h1><span>Organising institute: IIT Madras</span></div>'+
+  '<div class="fields"><div class="field"><small>Main paper</small><b>CS</b></div><div class="field"><small>Second paper</small><b>DA</b></div>'+
+  '<div class="field"><small>Exam window</small><b>6 to 21 Feb 2027</b></div><div class="field"><small>Days to 6 Feb</small><b>'+days+'</b></div></div></div>'+
+  '<p class="verdict '+cls+'">'+verdict+'</p>'+
+  '<p class="muted">Done: '+Math.round(a*100)+'%. Plan says '+Math.round(p*100)+'% by today. A topic counts fully only when both bubbles are filled: S for studied, P for past-year questions solved.</p>'+
+  '<p class="status" id="save-status">'+esc(statusMsg)+'</p>'+
+  '<div class="chart">'+chartSvg()+'</div>'+
+  '<div class="legend"><span><i class="plan"></i>Plan</span><span><i></i>Your progress</span></div>'+
+
+  '<h2>Your week after 12 October</h2>'+
+  '<div class="table-wrap"><table class="week"><thead><tr><th>Day</th><th>Hours</th><th>What to do</th></tr></thead><tbody>'+
+  '<tr><td>Weekdays</td><td>2.5</td><td>90 min new concepts, 45 min PYQs of the same topic, 15 min aptitude. Do it in the morning before work.</td></tr>'+
+  '<tr><td>Saturday</td><td>7 to 8</td><td>Finish the week\u2019s pending topics, then a full PYQ set for that subject.</td></tr>'+
+  '<tr><td>Sunday</td><td>5 to 6</td><td>Revise weak topics, update short notes, one subject test. Check this page: are you behind?</td></tr>'+
+  '</tbody></table></div>';
+
+  PHASES.forEach(function(ph){
+    html+='<h2>'+esc(ph.name)+'</h2><p class="phase-note">'+esc(ph.note)+'</p>';
+    S.filter(function(s){return s.ph===ph.id;}).forEach(function(s){html+=subjectHtml(s);});
+  });
+
+  html+='<h2>Phase 4: Revision and mocks (11 Jan to exam)</h2>'+
+  '<ul class="rules"><li>One full mock every weekend, then two a week in the last two weeks.</li>'+
+  '<li>Take the official mock on the <a href="https://gate2027.iitm.ac.in" target="_blank" rel="noopener">GATE 2027 website</a> to get used to the virtual calculator.</li>'+
+  '<li>DA has only a few past papers (it started in 2024), so mocks are your main DA practice.</li>'+
+  '<li>Revise from your own short notes only. No new topics after 25 January.</li></ul>'+
+  '<h3 style="margin-top:22px">Mock test log</h3>'+
+  '<div class="mock-form"><label>Date<input type="date" id="m-d" value="'+key(today)+'"></label>'+
+  '<label>Paper<select id="m-p"><option>CS</option><option>DA</option></select></label>'+
+  '<label>Marks out of 100<input type="number" id="m-s" min="0" max="100" step="0.33"></label>'+
+  '<button class="primary" id="m-add">Add mock</button></div>'+
+  (state.mocks.length?'':'<p class="muted">No mocks logged yet. Your first one is due the weekend of 16 January.</p>')+
+  mockSvg()+
+  '<ul class="mock-list">'+state.mocks.map(function(m,i){return {m:m,i:i};}).sort(function(a,b){return a.m.d<b.m.d?1:-1;}).map(function(o){
+    return '<li><b>'+esc(o.m.p)+'</b><span>'+esc(fmt(day(o.m.d)))+'</span><span>'+esc(o.m.s)+' / 100</span><button data-del="'+o.i+'">Remove</button></li>';}).join('')+'</ul>'+
+
+  '<h2>Rules that decide your score</h2><ul class="rules">'+
+  '<li>PYQs are the core. After each subject, solve its last 10 to 15 years of questions on <a href="https://gateoverflow.in" target="_blank" rel="noopener">GATE Overflow</a>.</li>'+
+  '<li>One course per subject. The links here open YouTube search for the recommended playlist. Pick it and stick with it.</li>'+
+  '<li>If you fall behind, cut in this order: DA deep topics, then Compiler Design, then Calculus. Never cut Discrete Maths, Algorithms, OS, DBMS or aptitude.</li>'+
+  '<li>Decide now which side projects pause until February. If you don\u2019t, GATE is what quietly drops.</li></ul>';
+  document.getElementById('root').innerHTML='<div class="wrap">'+html+'</div>';
+}
+
+render();
+function rerenderKeepOpen(){
+  var open=[].slice.call(document.querySelectorAll('details.subj[open]')).map(function(d){return d.dataset.sid;});
+  var y=window.scrollY;render();
+  open.forEach(function(id){var d=document.querySelector('details.subj[data-sid="'+id+'"]');if(d)d.open=true;});
+  window.scrollTo(0,y);
+}
+document.getElementById('root').addEventListener('click',function(e){
+  var b=e.target.closest('.bubble');
+  if(b){var k=tk(b.dataset.sid,b.dataset.i),f=b.dataset.f;var cur=state.t[k]||{};
+    cur[f]=cur[f]?0:1;state.t[k]=cur;changed();
+    var focusSel='.bubble[data-sid="'+b.dataset.sid+'"][data-i="'+b.dataset.i+'"][data-f="'+f+'"]';
+    rerenderKeepOpen();var nb=document.querySelector(focusSel);if(nb)nb.focus();return;}
+  if(e.target.id==='m-add'){
+    var d=document.getElementById('m-d').value,p=document.getElementById('m-p').value,s=parseFloat(document.getElementById('m-s').value);
+    if(!d||isNaN(s)||s<0||s>100){document.getElementById('m-s').focus();return;}
+    state.mocks.push({d:d,p:p,s:Math.round(s*100)/100});changed();rerenderKeepOpen();return;}
+  var del=e.target.closest('[data-del]');
+  if(del){state.mocks.splice(+del.dataset.del,1);changed();rerenderKeepOpen();}
+});
+setTimeout(pull,0);
+})();
+</script>
+</body>
+</html>
